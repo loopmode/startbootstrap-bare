@@ -56,8 +56,7 @@ function(_, $, Backbone, EventBus, BaseView, LayoutWatcher, Nav) {
 					.data('opacityFix', true)
 				;
 			}
-			var promise = this.animate(this.activePage, {opacity: 1});
-			return promise;
+			return this.animate(this.activePage, {opacity: 1});
 		},
 
 		animate: function(element, properties) {
