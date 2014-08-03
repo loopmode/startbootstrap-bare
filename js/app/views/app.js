@@ -35,29 +35,42 @@ function(_, $, Backbone, EventBus, BaseView, LayoutWatcher, Nav) {
 			var self = this
 			,	page = this.pages.filter(pageId ? '#' + pageId : '.default-page')
 			;
-			this.animateOut()
+			this.transitionOut()
 			.then(function() {
 				$(self.activePage).removeClass('active');
 				self.activePage = page.addClass('active');
-				self.animateIn();
 				document.title =  self.getTitle(page);
+				self.transitionIn();
 			});
 		},
 
+		transitionOut: function() {
+			var page = $(this.activePage);
+			EventBus.trigger('transition:out.started', page);
 
-		animateOut: function() {
-			return this.animate(this.activePage, {opacity: 0});
+			var promise = this.animate(page, {opacity: 0});
+			promise.then(function() {
+				EventBus.trigger('transition:out.finished', page);
+			});
+			
+			return promise;
 		},
 
-		animateIn: function() {
-			if (!this.activePage.data('opacityFix')) {
-				this.activePage
-					.css('opacity', 0)
-					.data('opacityFix', true)
-				;
+		transitionIn: function() {
+			var page = $(this.activePage);
+			EventBus.trigger('transition:in.started', this.activePage);
+			
+			if (!page.data('opacityFix')) {
+				page.css('opacity', 0).data('opacityFix', true);
 			}
-			return this.animate(this.activePage, {opacity: 1});
+
+			var promise = this.animate(this.activePage, {opacity: 1});
+			promise.then(function() {
+				EventBus.trigger('transition:in.finished', page);
+			});
+			return promise;
 		},
+
 
 		animate: function(element, properties) {
 			var dfd = $.Deferred();

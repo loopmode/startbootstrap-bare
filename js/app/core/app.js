@@ -30,7 +30,8 @@ function($, Router, EventBus, AppView) {
 		},
 
 		handleRouteChanged: function(route) {
-			EventBus.trigger('router:route', route);
+			this.currentRoute = route;
+			EventBus.trigger('route', route);
 			this.view.render(route);
 		},
 

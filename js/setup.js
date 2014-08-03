@@ -8,7 +8,8 @@
 			'underscore' : 'lib/underscore-min',
 			'jquery' : 'lib/jquery-1.11.0',
 			'bootstrap': 'lib/bootstrap.min',
-			'normalize': 'lib/normalize'
+			'normalize': 'lib/normalize',
+			'backstretch': 'lib/jquery.backstretch.min'
 		},
 		shim : {
 			'backbone' : {
@@ -25,7 +26,11 @@
 	            exports: '$'
 	        },
         	'bootstrap' : {
-        		deps :['jquery']
+        		deps : ['jquery']
+        	},
+        	'backstretch' : {
+        		deps : ['jquery'],
+        		exports: '$.fn.backstretch'
         	},
         	'normalize' : {
         		deps :['jquery']

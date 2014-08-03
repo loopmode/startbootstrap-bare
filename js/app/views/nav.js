@@ -8,7 +8,7 @@ define(['jquery', 'app/base/view', 'app/core/events'], function($, BaseView, Eve
 
 		initialize: function(options) {
 			this._super(options);
-			EventBus.on('router:route', this.updateHilighting, this);
+			EventBus.on('route', this.updateHilighting, this);
 		},
 
 		closeMobileMenu: function(e) {
@@ -19,12 +19,12 @@ define(['jquery', 'app/base/view', 'app/core/events'], function($, BaseView, Eve
 		    }
 		},
 
-		updateHilighting: function(route) {
-			this.$('a.active').removeClass('active');
-			if (!route) {
+		updateHilighting: function(pageId) {
+			this.$('a.active').removeClass('active'); 
+			if (!pageId || !$('#' + pageId).length) {
 				return;
 			}
-			$('[href$="' + route + '"').addClass('active');
+			$('[href$="' + pageId + '"').addClass('active');
 		}
 	});
 
