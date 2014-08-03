@@ -1,10 +1,11 @@
 define([
 	'jquery', 
 	'app/core/router',
-	'app/views/app-view',
+	'app/core/events',
+	'app/views/app',
 	'app/utils/log'
 ], 
-function($, Router, AppView) {
+function($, Router, EventBus, AppView) {
  
 	function App(options) {
 		this.options = $.extend(true, {}, this.defaults, options);
@@ -19,21 +20,21 @@ function($, Router, AppView) {
 		},
 		
 		start: function() { 
-			this.view.on('internal:link', this.handleLink, this);
-			this.router.on('route', this.handleRoute, this);
+			this.router.on('route', this.handleRouteChanged, this);
+			EventBus.on('click:link', this.handleApplicationLink, this);
 			Backbone.history.start({pushState: true});
 		},
 
-		handleLink: function(element) {
-			// remove leading slash or hashbang from the url
-			var href = element.attr('href')
-			,	fragment = href.replace(/^\//, '').replace('\#\!\/', '');
-			this.router.navigate(fragment, {trigger: true});
+		handleApplicationLink: function(route) {
+			this.router.navigate(route, {trigger: true});
 		},
 
-		handleRoute: function(route) {
-			this.view.showPage(route);
-		}
+		handleRouteChanged: function(route) {
+			EventBus.trigger('router:route', route);
+			this.view.render(route);
+		},
+
+
 	};
 	
 

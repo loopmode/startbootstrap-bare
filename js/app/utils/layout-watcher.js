@@ -7,49 +7,55 @@
  */
 define(['jquery', 'underscore'], function($, _) {
 	
-	function LayoutWatcher(target) {
+	function Watcher(target) {
 		this.target = $(target);
 		this.modes = ['xs', 'sm', 'md', 'lg'];
 		this.initialize();
 	}
 
-	LayoutWatcher.prototype = {
+	Watcher.prototype = {
+		mode: null,
+
 		initialize: function() {
-			this.elements = {};
 			_.each(this.modes, function(mode) {
-				this.elements[mode] = $('<i></i>')
-					.data('class', mode)
+				var el = $('<span></span>')
 					.attr('class', 'visible-' + mode)
+					.data('class', mode)
+					.insertAfter('body')
 				;
 			}, this);
+			this.elements = $('body').nextAll('[class^="visible-"]')
 		},
-		start: function() {
-			_.each(this.elements, function(el) {
-				el.insertAfter('body');
-			});
+		
+		start: function() { 
 			this.update();
 			$(window).on('resize.layout', $.proxy(this.update, this));
 		},
 		stop: function() {
-			_.each(this.elements, function(el) {
-				el.remove();
-			});
-			$(window).off('resize.layout');	
+			$(window).off('resize.layout');
 		},
+
 		update: function() {
-			var target = this.target.removeClass(this.modes.join(' '));
-			_.each(this.elements, function(el) {
-				target[el.is(':visible') ? 'addClass' : 'removeClass'](el.data('class'));
+
+			var target = this.target;
+			this.elements.each(function() {
+				target[$(this).is(':visible') ? 'addClass' : 'removeClass']($(this).data('class'));
 			});
-			$(this).triggerHandler('update');
+
+			var mode = this.elements.filter(':visible').data('class');
+			if (mode !== this.mode) {
+				this.mode = mode;
+				$(window).triggerHandler('responsiveChange', mode);
+			}
+  
 		}
 	}; 
 
-	LayoutWatcher.watch = function(target) {
-		var instance = new LayoutWatcher(target);
+	Watcher.watch = function(target) {
+		var instance = new Watcher(target);
 		instance.start();
 		return instance;
 	};
 
-	return LayoutWatcher;
+	return Watcher;
 });

@@ -31,6 +31,10 @@ function(_, Backbone) {
 			_.each(this.views, function(view, selector) {
 				this.assign(selector, selector);
 			}, this);
+		},
+		addView: function(view, selector) {
+			this.views[selector] = view;
+			this.assign(view, selector);
 		}
 
 	});

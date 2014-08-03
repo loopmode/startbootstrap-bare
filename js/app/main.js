@@ -1,10 +1,10 @@
-define(['jquery', 'app/core/app'], function($, App) {	
+define(['jquery', 'app/core/app', 'app/views/intro'], function($, App, Intro) {	
 
 	var app, options;
 
  	options = {
  		view: {
- 			transitionDuration: 0
+ 			transitionDuration: 250
  		}
  	};
 
