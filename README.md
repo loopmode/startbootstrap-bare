@@ -18,6 +18,11 @@ app/views contains modules that define concrete views, extended from the more ab
 The app/util/layout-watcher Module keeps the body element updated with a class that 
 indicates the current bootstrap layout mode (xs/sm/md/lg) to your CSS rules.
 
+
+Bootstrap mobile menu fixes for smooth closing animation
+
+
+
 page elements - optional data attributes
 
-data-page-title
+data-page-title: will be appended to the default window title
